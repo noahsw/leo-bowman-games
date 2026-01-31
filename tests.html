@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terror Castle - Test Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            background: #1a1a2e;
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #9400D3;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        #test-results {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        #test-results ul {
+            list-style: none;
+        }
+
+        #test-results li {
+            padding: 8px 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        #test-results li.passed {
+            border-left: 4px solid #4CAF50;
+        }
+
+        #test-results li.failed {
+            border-left: 4px solid #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .passed { color: #4CAF50; }
+        .failed { color: #f44336; }
+
+        #loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        a {
+            color: #9400D3;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="test-results">
+        <h1>Terror Castle Test Suite</h1>
+        <div class="nav">
+            <a href="index.html">← Back to Game</a>
+        </div>
+        <div id="loading">Running tests...</div>
+    </div>
+
+    <!-- Load game code first (needed for classes) -->
+    <script src="game.js"></script>
+    <!-- Then load and run tests -->
+    <script src="tests.js"></script>
+</body>
+</html>

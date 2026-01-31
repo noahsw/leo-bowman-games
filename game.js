@@ -18,10 +18,11 @@ const GameStates = {
 };
 
 // Castle floor configuration
+// Floors are positioned to leave room for the trap UI at the bottom (100px)
 const FLOORS = [
-    { id: 1, name: 'Ground Floor', y: 450, height: 130, color: '#5a4a3a' },
-    { id: 2, name: 'Second Floor', y: 290, height: 130, color: '#6a5a4a' },
-    { id: 3, name: 'Treasure Room', y: 130, height: 130, color: '#7a6a5a' }
+    { id: 1, name: 'Ground Floor', y: 370, height: 110, color: '#5a4a3a' },
+    { id: 2, name: 'Second Floor', y: 230, height: 110, color: '#6a5a4a' },
+    { id: 3, name: 'Treasure Room', y: 90, height: 110, color: '#7a6a5a' }
 ];
 
 // Stair positions - trolls use these to climb between floors
@@ -34,7 +35,8 @@ const STAIRS = [
 const LEVELS = [
     {
         name: 'The First Night',
-        startCoins: 60,
+        startCoins: 100,  // Enough to buy several traps!
+        waveBonus: 25,    // Bonus coins after each wave
         waves: [
             { trollCount: 3, spawnDelay: 2500, trollSpeed: 40, trollHealth: 40 },
             { trollCount: 4, spawnDelay: 2200, trollSpeed: 45, trollHealth: 45 }
@@ -42,7 +44,8 @@ const LEVELS = [
     },
     {
         name: 'Growing Threat',
-        startCoins: 40,
+        startCoins: 50,
+        waveBonus: 30,
         waves: [
             { trollCount: 4, spawnDelay: 2000, trollSpeed: 50, trollHealth: 50 },
             { trollCount: 5, spawnDelay: 1800, trollSpeed: 55, trollHealth: 55 },
@@ -51,7 +54,8 @@ const LEVELS = [
     },
     {
         name: 'Full Assault',
-        startCoins: 50,
+        startCoins: 60,
+        waveBonus: 35,
         waves: [
             { trollCount: 5, spawnDelay: 1800, trollSpeed: 55, trollHealth: 60 },
             { trollCount: 6, spawnDelay: 1500, trollSpeed: 60, trollHealth: 65 },
@@ -153,6 +157,7 @@ class Troll {
         this.hurtTimer = 0;
         this.climbTimer = 0;
         this.climbDuration = 800; // Time to climb stairs
+        this.pointsAwarded = false; // Track if points were given for this troll
 
         // Set initial direction based on floor
         // Floor 1: walk right toward stairs at x=780
@@ -377,7 +382,7 @@ class Troll {
             ctx.fillStyle = '#333';
             ctx.fillRect(barX, barY, barWidth, barHeight);
 
-            const healthPercent = this.health / this.maxHealth;
+            const healthPercent = Math.max(0, Math.min(1, this.health / this.maxHealth));
             ctx.fillStyle = healthPercent > 0.5 ? '#4CAF50' : (healthPercent > 0.25 ? '#ff9800' : '#f44336');
             ctx.fillRect(barX, barY, barWidth * healthPercent, barHeight);
         }
@@ -1469,16 +1474,21 @@ class Game {
                 if (this.checkAABB(troll.getBounds(), this.gem.getBounds())) {
                     this.gem.health -= 15;
                     troll.active = false;
+                    // Immediately check for game over
+                    if (this.gem.health <= 0) {
+                        this.state = GameStates.GAME_OVER;
+                    }
                 }
             }
+        });
 
-            // Check if troll died (from trap damage)
-            if (!troll.active || troll.state === 'dying') {
-                if (troll.health <= 0) {
-                    this.score += 100;
-                    this.coins += 8;
-                    this.trollsDefeated++;
-                }
+        // Award points for trolls killed by traps (check separately to avoid double-counting)
+        this.trolls.forEach(troll => {
+            if (troll.state === 'dying' && !troll.pointsAwarded) {
+                this.score += 100;
+                this.coins += 15;  // More coins per kill!
+                this.trollsDefeated++;
+                troll.pointsAwarded = true; // Mark so we don't award again
             }
         });
     }
@@ -1497,6 +1507,12 @@ class Game {
         // Check wave complete
         if (this.trollsToSpawn === 0 && this.trolls.length === 0) {
             const level = LEVELS[this.currentLevel];
+
+            // Award wave completion bonus!
+            const waveBonus = level.waveBonus || 20;
+            this.coins += waveBonus;
+            this.waveBonusAwarded = waveBonus; // Store for display
+
             this.currentWave++;
 
             if (this.currentWave >= level.waves.length) {
@@ -1574,7 +1590,7 @@ class Game {
     renderMenu() {
         // Background castle silhouette
         this.ctx.fillStyle = '#2a2a4a';
-        this.ctx.fillRect(100, 200, this.width - 200, this.height - 220);
+        this.ctx.fillRect(100, 150, this.width - 200, 350);
 
         // Battlements
         for (let x = 100; x < this.width - 100; x += 60) {
@@ -1676,19 +1692,20 @@ class Game {
             this.ctx.fill();
         }
 
-        // Castle main wall
+        // Castle main wall - stops above the trap UI area
+        const castleBottom = 490; // Leave room for trap UI
         this.ctx.fillStyle = '#3a3a4a';
-        this.ctx.fillRect(30, 100, this.width - 60, this.height - 110);
+        this.ctx.fillRect(30, 60, this.width - 60, castleBottom - 60);
 
         // Castle outline
         this.ctx.strokeStyle = '#2a2a3a';
         this.ctx.lineWidth = 4;
-        this.ctx.strokeRect(30, 100, this.width - 60, this.height - 110);
+        this.ctx.strokeRect(30, 60, this.width - 60, castleBottom - 60);
 
         // Battlements
         this.ctx.fillStyle = '#3a3a4a';
         for (let x = 30; x < this.width - 30; x += 50) {
-            this.ctx.fillRect(x, 70, 35, 30);
+            this.ctx.fillRect(x, 30, 35, 30);
         }
 
         // Render floors
