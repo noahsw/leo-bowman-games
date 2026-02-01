@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#1a1a2e"/>
+
+  <!-- Stars -->
+  <circle cx="50" cy="30" r="2" fill="#fff"/>
+  <circle cx="120" cy="50" r="1.5" fill="#fff"/>
+  <circle cx="200" cy="25" r="2" fill="#fff"/>
+  <circle cx="280" cy="45" r="1.5" fill="#fff"/>
+  <circle cx="350" cy="35" r="2" fill="#fff"/>
+  <circle cx="80" cy="70" r="1" fill="#fff"/>
+  <circle cx="320" cy="60" r="1" fill="#fff"/>
+
+  <!-- Castle silhouette -->
+  <rect x="100" y="120" width="200" height="130" fill="#3a3a4a"/>
+
+  <!-- Battlements -->
+  <rect x="100" y="100" width="30" height="20" fill="#3a3a4a"/>
+  <rect x="145" y="100" width="30" height="20" fill="#3a3a4a"/>
+  <rect x="190" y="100" width="30" height="20" fill="#3a3a4a"/>
+  <rect x="235" y="100" width="30" height="20" fill="#3a3a4a"/>
+  <rect x="270" y="100" width="30" height="20" fill="#3a3a4a"/>
+
+  <!-- Gem glow -->
+  <circle cx="200" cy="170" r="30" fill="#9400D3" opacity="0.3"/>
+  <circle cx="200" cy="170" r="20" fill="#9400D3" opacity="0.5"/>
+
+  <!-- Gem -->
+  <polygon points="200,150 220,170 200,190 180,170" fill="#9400D3"/>
+  <polygon points="200,155 215,170 200,180 190,170" fill="#BA55D3"/>
+
+  <!-- Title -->
+  <text x="200" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFD700">TERROR CASTLE</text>
+</svg>
