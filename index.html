@@ -3,13 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terror Castle - Defend the Gem!</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Leo & Bowman Games</title>
+    <link rel="stylesheet" href="selector.css">
 </head>
 <body>
-    <div class="game-container">
-        <canvas id="gameCanvas" width="900" height="600"></canvas>
-    </div>
-    <script src="game.js"></script>
+    <header class="site-header">
+        <h1 class="site-title">Leo & Bowman Games</h1>
+        <p class="site-tagline">Choose your adventure!</p>
+    </header>
+
+    <main class="game-grid">
+        <article class="game-card">
+            <a href="games/terror-castle/index.html">
+                <div class="game-preview">
+                    <img src="games/terror-castle/preview.svg"
+                         alt="Terror Castle preview - Defend the castle from trolls"
+                         loading="lazy">
+                </div>
+                <div class="game-info">
+                    <h2>Terror Castle</h2>
+                    <p>Defend the Gem of Darkness from the trolls!</p>
+                </div>
+            </a>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <p>Made with ❤️ for Leo and Bowman</p>
+    </footer>
 </body>
 </html>
