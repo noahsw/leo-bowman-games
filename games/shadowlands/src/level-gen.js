@@ -47,9 +47,29 @@ export class LevelGenerator {
             currentX += segment.width + Utils.randomInt(minGap, maxGap);
         }
         
-        // Final Platform for Key
+        // Scatter random spikes on platforms
+        const platforms = entities.filter(e => e.type === 'platform' && e.w >= 150);
+        const spikeChance = Math.min(0.8, 0.3 + levelNumber * 0.1);
+        const maxSpikesPerPlatform = Math.min(3, 1 + Math.floor(levelNumber / 3));
+
+        for (const plat of platforms) {
+            // Skip the starting floor (x=0) so player doesn't spawn into spikes
+            if (plat.x < 100) continue;
+
+            if (Math.random() < spikeChance) {
+                const numSpikes = Utils.randomInt(1, maxSpikesPerPlatform);
+                for (let s = 0; s < numSpikes; s++) {
+                    // Place spike on top of platform, with margin from edges
+                    const spikeX = plat.x + Utils.randomInt(30, plat.w - 60);
+                    const spikeY = plat.y - 30;
+                    entities.push(new Spike(spikeX, spikeY));
+                }
+            }
+        }
+
+        // Final Platform for Key (no spikes)
         entities.push(new Platform(currentX, 400, 200, 50));
-        
+
         // Add Key
         const key = new Key(currentX + 80, 340);
         entities.push(key);
