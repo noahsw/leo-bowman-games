@@ -1,50 +1,52 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: 0.0.0 (Template) → 1.0.0 (Initial Ratification)
+- Modified Principles: All placeholders replaced with concrete game dev principles.
+- Added Sections: Test-Driven Development (Mandated), Component Modularity, Vanilla Implementation.
+- Templates requiring updates:
+  - .specify/templates/plan-template.md (✅ Pending runtime check)
+  - .specify/templates/spec-template.md (✅ Pending runtime check)
+- TODO: None
+-->
+
+# leo-bowman-games Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Test-Driven Development (NON-NEGOTIABLE)
+All implementation MUST follow strict Test-Driven Development. No implementation code shall be written before:
+1. Unit tests are written
+2. Tests are validated and approved by the user
+3. Tests are confirmed to FAIL (Red phase)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Component Modularity
+Each game must exist as a self-contained module within the `games/` directory. Shared logic (physics, audio, inputs) should be extracted to `games/shared/` only when used by multiple games. Games should be independently testable and playable.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Vanilla Implementation
+Prefer standard Web APIs (HTML5 Canvas, Web Audio, ES Modules) over external frameworks or libraries unless complexity demands it. This ensures longevity, performance, and educational value.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Documentation First
+No code is written without a specification and implementation plan. Design decisions, data models, and trade-offs must be documented in the `specs/` directory before implementation begins.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Simplicity
+Avoid over-engineering. Solicit the simplest solution that meets the requirements. Complex patterns (e.g., Entity-Component-Systems) should only be introduced if the game logic scale requires it.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technical Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- **Stack**: HTML5, CSS3, JavaScript (ES6+).
+- **Environment**: Modern web browsers (Chrome, Firefox, Safari).
+- **No Build Step**: Code should run directly in the browser via a local server (e.g., `npx serve`) without transpilation, unless a specific feature plan justifies introducing a bundler.
+- **Assets**: Assets should be contained within the game's directory or a shared asset folder.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Quality Gates
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+1. **Linting**: All code must pass `npm run lint` (if configured) or standard style checks.
+2. **Test Coverage**: Logic-heavy components (Physics, State Managers) must have unit tests.
+3. **Manual Verification**: Gameplay loops must be manually verified against the User Scenarios in the spec.
+4. **TDD Compliance**: Every PR/Feature must demonstrate the Red-Green-Refactor cycle.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This Constitution supersedes all other project practices. Amendments require documentation, approval, and a migration plan for existing code if necessary.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-02-01 | **Last Amended**: 2026-02-01

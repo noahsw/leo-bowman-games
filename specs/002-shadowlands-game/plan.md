@@ -58,6 +58,9 @@ games/
         ├── renderer.js  # Drawing/Rendering logic
         ├── storage.js   # SaveManager/LocalStorage
         └── utils.js     # Shared utilities
+    └── tests/
+        ├── physics.test.js  # Unit tests for PhysicsEngine
+        └── level-gen.test.js # Unit tests for LevelGenerator
 ```
 
 **Structure Decision**: Modularized source code within `games/shadowlands/src/` to keep `game.js` clean, unlike the monolithic `terror-castle/game.js`.

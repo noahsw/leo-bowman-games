@@ -1,0 +1,205 @@
+import { InputManager } from './src/input.js';
+import { Renderer } from './src/renderer.js';
+import { PhysicsEngine } from './src/physics.js';
+import { Player, Platform } from './src/entities.js';
+import { LevelGenerator } from './src/level-gen.js';
+import { SaveManager } from './src/storage.js';
+
+// Main Game Entry Point
+class Game {
+    constructor() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.lastTime = 0;
+        
+        // Game State
+        this.isRunning = false;
+        this.currentLevel = 1;
+        this.score = 0;
+        
+        // Components
+        this.input = new InputManager();
+        this.renderer = new Renderer(this.ctx, this.canvas.width, this.canvas.height);
+        this.physics = new PhysicsEngine();
+        this.levelGen = new LevelGenerator();
+        this.storage = new SaveManager();
+        
+        // Game World
+        this.camera = { x: 0, y: 0 };
+        this.entities = [];
+        this.player = null;
+        
+        // Bind methods
+        this.loop = this.loop.bind(this);
+        
+        // UI Elements
+        this.menuOverlay = document.getElementById('menu-overlay');
+        this.startBtn = document.getElementById('start-btn');
+        this.continueBtn = document.getElementById('continue-btn');
+        
+        this.setupMenu();
+    }
+
+    setupMenu() {
+        const savedData = this.storage.load();
+        
+        if (savedData) {
+            this.continueBtn.classList.remove('hidden');
+            this.continueBtn.textContent = `Continue (Level ${savedData.maxLevel})`;
+            
+            this.continueBtn.addEventListener('click', () => {
+                this.currentLevel = savedData.maxLevel;
+                // We could restore score too, but maybe reset score per session or restore high score?
+                // Spec says "start at their saved level with their saved score"
+                this.score = savedData.highScore; 
+                this.startGame();
+            });
+        }
+        
+        this.startBtn.addEventListener('click', () => {
+            this.currentLevel = 1;
+            this.score = 0;
+            // Clear save if new game? Or keep high score? 
+            // Spec implies "New Game" resets session.
+            this.startGame();
+        });
+        
+        // Pause handling
+        window.addEventListener('keydown', (e) => {
+             if (e.code === 'Escape' || e.code === 'KeyP') {
+                 this.togglePause();
+             }
+        });
+    }
+
+    startGame() {
+        this.menuOverlay.classList.add('hidden');
+        this.loadLevel(this.currentLevel);
+        this.start();
+    }
+
+    togglePause() {
+        if (!this.isRunning) {
+            // Resume
+            this.menuOverlay.classList.add('hidden');
+            this.start();
+        } else {
+            // Pause
+            this.isRunning = false;
+            this.menuOverlay.classList.remove('hidden');
+            // Show simple pause text or just reuse menu? 
+            // For MVP, just reusing menu overlay but maybe change title?
+            // Or just pause loop.
+        }
+    }
+
+    loadLevel(levelNum) {
+        const levelData = this.levelGen.generate(levelNum);
+        this.entities = levelData.entities;
+        
+        // Setup Player
+        this.player = new Player(levelData.playerStart.x, levelData.playerStart.y);
+        this.entities.push(this.player);
+        
+        // Reset Camera
+        this.camera.x = 0;
+        
+        // Update UI
+        this.updateHUD();
+        
+        console.log(`Loaded Level ${levelNum}`);
+    }
+    
+    updateHUD() {
+        document.getElementById('level-display').textContent = `Level: ${this.currentLevel}`;
+        document.getElementById('score-display').textContent = `Score: ${this.score}`;
+    }
+
+    start() {
+        if (this.isRunning) return;
+        this.isRunning = true;
+        this.lastTime = performance.now();
+        requestAnimationFrame(this.loop);
+        console.log('Game Started');
+    }
+
+    loop(timestamp) {
+        if (!this.isRunning) return;
+
+        const dt = (timestamp - this.lastTime) / 1000;
+        this.lastTime = timestamp;
+
+        this.update(dt);
+        this.draw();
+
+        requestAnimationFrame(this.loop);
+    }
+
+    update(dt) {
+        // Cap dt to prevent huge jumps if tab is inactive
+        const safeDt = Math.min(dt, 0.1);
+        
+        // Handle Input
+        if (this.player && !this.player.isDead) {
+            this.input.handlePlayerInput(this.player);
+            
+            if (this.input.isPressed('ArrowUp')) {
+                this.physics.jump(this.player);
+            }
+        }
+        
+        // Physics Update
+        if (this.player) {
+            this.physics.update(safeDt, this.player, this.entities);
+            
+            // Check Triggers (Win/Death)
+            const event = this.physics.checkTriggers(this.player, this.entities);
+            if (event) {
+                if (event.type === 'level_complete') {
+                    console.log('Level Complete!');
+                    
+                    // Save Progress
+                    this.storage.save(this.currentLevel + 1, this.score);
+                    
+                    this.currentLevel++;
+                    this.loadLevel(this.currentLevel);
+                    return;
+                } else if (event.type === 'player_death') {
+                    console.log('Player Died!');
+                    this.player.isDead = true;
+                    // Simple respawn delay could be added here, 
+                    // for now just immediate restart of level
+                    this.loadLevel(this.currentLevel);
+                    return;
+                } else if (event.type === 'star_collected') {
+                    this.score += 100;
+                    this.updateHUD();
+                }
+            }
+        }
+        
+        // Camera Follow
+        if (this.player) {
+            this.camera.x = this.player.x - 300; // Keep player somewhat left-center
+            if (this.camera.x < 0) this.camera.x = 0;
+        }
+
+        // Update all entities (animations/logic)
+        this.entities.forEach(entity => entity.update(safeDt));
+        
+        // Remove entities marked for removal
+        this.entities = this.entities.filter(e => !e.toBeRemoved);
+    }
+
+    draw() {
+        this.renderer.clear();
+        
+        // Draw all entities
+        this.entities.forEach(entity => this.renderer.drawEntity(entity, this.camera));
+    }
+}
+
+// Initialize game when DOM is loaded
+window.addEventListener('DOMContentLoaded', () => {
+    window.game = new Game(); // Expose to window for debugging
+});

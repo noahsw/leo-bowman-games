@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadowlands</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="900" height="600"></canvas>
+        <div id="ui-overlay">
+            <div id="hud">
+                <div id="score-display">Score: 0</div>
+                <div id="level-display">Level: 1</div>
+            </div>
+            <div id="menu-overlay">
+                <h1 class="game-title">Shadowlands</h1>
+                <div id="menu-options">
+                    <button id="start-btn">New Game</button>
+                    <button id="continue-btn" class="hidden">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="game.js"></script>
+</body>
+</html>

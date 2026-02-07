@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <!-- Dark background -->
+  <rect width="400" height="300" fill="#0a0a14"/>
+
+  <!-- Fog/mist layers -->
+  <ellipse cx="200" cy="250" rx="250" ry="40" fill="#1a1a3a" opacity="0.5"/>
+  <ellipse cx="150" cy="260" rx="180" ry="30" fill="#1a1a3a" opacity="0.4"/>
+
+  <!-- Shadow trees -->
+  <polygon points="60,130 75,250 45,250" fill="#0d0d1a"/>
+  <polygon points="50,150 60,130 70,150" fill="#0d0d1a"/>
+  <polygon points="340,140 355,250 325,250" fill="#0d0d1a"/>
+  <polygon points="330,160 340,140 350,160" fill="#0d0d1a"/>
+
+  <!-- Distant mountains -->
+  <polygon points="0,200 100,100 200,200" fill="#12122a"/>
+  <polygon points="150,200 280,80 400,200" fill="#0f0f24"/>
+
+  <!-- Moon glow -->
+  <circle cx="300" cy="70" r="50" fill="#3344aa" opacity="0.15"/>
+  <circle cx="300" cy="70" r="30" fill="#4466cc" opacity="0.2"/>
+  <circle cx="300" cy="70" r="20" fill="#c0c8e8"/>
+
+  <!-- Player silhouette -->
+  <circle cx="200" cy="185" r="8" fill="#111"/>
+  <rect x="196" y="193" width="8" height="18" fill="#111"/>
+  <line x1="196" y1="200" x2="188" y2="210" stroke="#111" stroke-width="3"/>
+  <line x1="204" y1="200" x2="212" y2="210" stroke="#111" stroke-width="3"/>
+  <line x1="196" y1="218" x2="190" y2="235" stroke="#111" stroke-width="3"/>
+  <line x1="204" y1="218" x2="210" y2="235" stroke="#111" stroke-width="3"/>
+
+  <!-- Glowing eyes in shadows -->
+  <circle cx="90" cy="200" r="2" fill="#ff3333" opacity="0.8"/>
+  <circle cx="98" cy="200" r="2" fill="#ff3333" opacity="0.8"/>
+  <circle cx="320" cy="210" r="2" fill="#ff3333" opacity="0.8"/>
+  <circle cx="328" cy="210" r="2" fill="#ff3333" opacity="0.8"/>
+
+  <!-- Title -->
+  <text x="200" y="275" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#6688cc">SHADOWLANDS</text>
+</svg>
