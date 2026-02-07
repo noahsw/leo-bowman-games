@@ -14,7 +14,7 @@ export class LevelGenerator {
         
         let currentX = 400;
         // Increase level length with difficulty
-        const totalSegments = 3 + Math.floor(levelNumber / 2); 
+        const totalSegments = 2 + Math.floor(levelNumber / 2);
         
         for (let i = 0; i < totalSegments; i++) {
             // Pick a segment based on difficulty scaling
@@ -41,9 +41,10 @@ export class LevelGenerator {
                 }
             });
             
-            // Add random gap between segments
-            const gap = Utils.randomInt(50, 150 + (levelNumber * 10)); // Wider gaps at higher levels
-            currentX += segment.width + gap;
+            // Add random gap between segments (small on early levels)
+            const minGap = levelNumber <= 2 ? 20 : 50;
+            const maxGap = levelNumber <= 2 ? 60 : 150 + (levelNumber * 10);
+            currentX += segment.width + Utils.randomInt(minGap, maxGap);
         }
         
         // Final Platform for Key

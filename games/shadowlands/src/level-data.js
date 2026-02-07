@@ -1,12 +1,33 @@
 export const LevelSegments = [
-    // Easy Segment (Just platforms)
+    // Easy Segment A - Flat run with a star
     {
         difficulty: 1,
-        width: 1000,
+        width: 600,
         layout: [
-            { type: 'platform', x: 0, y: 400, w: 200, h: 20 },
-            { type: 'platform', x: 300, y: 350, w: 200, h: 20 },
-            { type: 'platform', x: 600, y: 300, w: 200, h: 20 }
+            { type: 'platform', x: 0, y: 400, w: 600, h: 20 },
+            { type: 'star', x: 280, y: 340 }
+        ]
+    },
+    // Easy Segment B - Small step-ups
+    {
+        difficulty: 1,
+        width: 700,
+        layout: [
+            { type: 'platform', x: 0, y: 400, w: 300, h: 20 },
+            { type: 'platform', x: 250, y: 360, w: 200, h: 20 },
+            { type: 'platform', x: 400, y: 400, w: 300, h: 20 },
+            { type: 'star', x: 320, y: 300 }
+        ]
+    },
+    // Easy Segment C - Gentle platforming
+    {
+        difficulty: 1,
+        width: 800,
+        layout: [
+            { type: 'platform', x: 0, y: 400, w: 250, h: 20 },
+            { type: 'platform', x: 200, y: 350, w: 200, h: 20 },
+            { type: 'platform', x: 450, y: 400, w: 350, h: 20 },
+            { type: 'star', x: 280, y: 290 }
         ]
     },
     // Medium Segment (Spikes)
