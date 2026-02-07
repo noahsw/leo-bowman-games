@@ -4,6 +4,9 @@ export class InputManager {
         this.downKeys = {}; // Keys currently held down
 
         window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code.startsWith('Arrow')) {
+                e.preventDefault();
+            }
             this.keys[e.code] = true;
             this.downKeys[e.code] = true;
         });

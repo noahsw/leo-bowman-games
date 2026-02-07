@@ -16,6 +16,7 @@ class Game {
         this.isRunning = false;
         this.currentLevel = 1;
         this.score = 0;
+        this.lives = 3;
         
         // Components
         this.input = new InputManager();
@@ -37,6 +38,9 @@ class Game {
         this.startBtn = document.getElementById('start-btn');
         this.continueBtn = document.getElementById('continue-btn');
         
+        this.gameOverOverlay = document.getElementById('gameover-overlay');
+        this.newGameBtn = document.getElementById('newgame-btn');
+
         this.setupMenu();
     }
 
@@ -49,9 +53,8 @@ class Game {
             
             this.continueBtn.addEventListener('click', () => {
                 this.currentLevel = savedData.maxLevel;
-                // We could restore score too, but maybe reset score per session or restore high score?
-                // Spec says "start at their saved level with their saved score"
-                this.score = savedData.highScore; 
+                this.score = savedData.highScore;
+                this.lives = 3;
                 this.startGame();
             });
         }
@@ -59,11 +62,17 @@ class Game {
         this.startBtn.addEventListener('click', () => {
             this.currentLevel = 1;
             this.score = 0;
-            // Clear save if new game? Or keep high score? 
-            // Spec implies "New Game" resets session.
+            this.lives = 3;
             this.startGame();
         });
         
+        this.newGameBtn.addEventListener('click', () => {
+            this.currentLevel = 1;
+            this.score = 0;
+            this.lives = 3;
+            this.startGame();
+        });
+
         // Pause handling
         window.addEventListener('keydown', (e) => {
              if (e.code === 'Escape' || e.code === 'KeyP') {
@@ -74,6 +83,7 @@ class Game {
 
     startGame() {
         this.menuOverlay.classList.add('hidden');
+        this.gameOverOverlay.classList.add('hidden');
         this.loadLevel(this.currentLevel);
         this.start();
     }
@@ -113,6 +123,7 @@ class Game {
     updateHUD() {
         document.getElementById('level-display').textContent = `Level: ${this.currentLevel}`;
         document.getElementById('score-display').textContent = `Score: ${this.score}`;
+        document.getElementById('lives-display').textContent = `Lives: ${this.lives}`;
     }
 
     start() {
@@ -143,7 +154,7 @@ class Game {
         if (this.player && !this.player.isDead) {
             this.input.handlePlayerInput(this.player);
             
-            if (this.input.isPressed('ArrowUp')) {
+            if (this.input.isPressed('ArrowUp') || this.input.isPressed('Space')) {
                 this.physics.jump(this.player);
             }
         }
@@ -167,8 +178,15 @@ class Game {
                 } else if (event.type === 'player_death') {
                     console.log('Player Died!');
                     this.player.isDead = true;
-                    // Simple respawn delay could be added here, 
-                    // for now just immediate restart of level
+                    this.lives--;
+                    this.updateHUD();
+
+                    if (this.lives <= 0) {
+                        this.isRunning = false;
+                        this.gameOverOverlay.classList.remove('hidden');
+                        return;
+                    }
+
                     this.loadLevel(this.currentLevel);
                     return;
                 } else if (event.type === 'star_collected') {
