@@ -1,6 +1,6 @@
-import { Platform, Key, Spike, SkeletonBlock, Star } from './entities.js';
-import { Utils } from './utils.js';
-import { LevelSegments } from './level-data.js';
+import { Platform, Key, Spike, SkeletonBlock, Star } from './entities.js?v=2';
+import { Utils } from './utils.js?v=2';
+import { LevelSegments } from './level-data.js?v=2';
 
 export class LevelGenerator {
     constructor() {

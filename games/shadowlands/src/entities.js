@@ -20,21 +20,111 @@ export class Entity {
 }
 
 export class Player extends Entity {
-    constructor(x, y) {
-        super(x, y, 30, 30, 'black');
+    constructor(x, y, character) {
+        super(x, y, 30, 40, 'black');
         this.vx = 0;
         this.vy = 0;
         this.speed = 300;
         this.jumpForce = -700;
         this.isGrounded = false;
         this.isDead = false;
+        this.character = character || 'leo';
     }
 
     update(dt) {
         if (this.isDead) return;
-        
-        // Physics integration will happen in PhysicsEngine
-        // This method will be used for state updates and animation logic
+    }
+
+    draw(ctx, camera) {
+        const sx = Math.floor(this.x - camera.x);
+        const sy = Math.floor(this.y - camera.y);
+
+        if (this.character === 'leo') {
+            this.drawLeo(ctx, sx, sy);
+        } else {
+            this.drawBowman(ctx, sx, sy);
+        }
+    }
+
+    drawLeo(ctx, sx, sy) {
+        // Leo Trooper - dark helmet with visor, dark outfit
+        // Body (dark suit)
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(sx + 5, sy + 16, 20, 16);
+
+        // Legs
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(sx + 7, sy + 32, 7, 8);
+        ctx.fillRect(sx + 16, sy + 32, 7, 8);
+
+        // Arms
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(sx + 1, sy + 17, 5, 12);
+        ctx.fillRect(sx + 24, sy + 17, 5, 12);
+
+        // Helmet (rounded top)
+        ctx.fillStyle = '#3a3a4a';
+        ctx.beginPath();
+        ctx.ellipse(sx + 15, sy + 8, 13, 11, 0, Math.PI, 0);
+        ctx.fill();
+        ctx.fillRect(sx + 2, sy + 8, 26, 10);
+
+        // Visor (blue-gray slit)
+        ctx.fillStyle = '#5577aa';
+        ctx.fillRect(sx + 4, sy + 8, 22, 5);
+
+        // Visor shine
+        ctx.fillStyle = '#8899bb';
+        ctx.fillRect(sx + 6, sy + 9, 8, 2);
+    }
+
+    drawBowman(ctx, sx, sy) {
+        // Bowman Phone - brown hair, red shirt, friendly face
+        // Body (red shirt)
+        ctx.fillStyle = '#cc2222';
+        ctx.fillRect(sx + 5, sy + 16, 20, 16);
+
+        // Legs (blue jeans)
+        ctx.fillStyle = '#2244aa';
+        ctx.fillRect(sx + 7, sy + 32, 7, 8);
+        ctx.fillRect(sx + 16, sy + 32, 7, 8);
+
+        // Arms (red shirt)
+        ctx.fillStyle = '#cc2222';
+        ctx.fillRect(sx + 1, sy + 17, 5, 12);
+        ctx.fillRect(sx + 24, sy + 17, 5, 12);
+
+        // Skin (hands)
+        ctx.fillStyle = '#f4c99b';
+        ctx.fillRect(sx + 1, sy + 27, 5, 3);
+        ctx.fillRect(sx + 24, sy + 27, 5, 3);
+
+        // Head (skin)
+        ctx.fillStyle = '#f4c99b';
+        ctx.beginPath();
+        ctx.ellipse(sx + 15, sy + 9, 11, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hair (brown, on top)
+        ctx.fillStyle = '#5a3825';
+        ctx.beginPath();
+        ctx.ellipse(sx + 15, sy + 5, 12, 7, 0, Math.PI, 0);
+        ctx.fill();
+        // Side hair
+        ctx.fillRect(sx + 3, sy + 3, 4, 6);
+        ctx.fillRect(sx + 23, sy + 3, 4, 6);
+
+        // Eyes
+        ctx.fillStyle = '#222';
+        ctx.fillRect(sx + 10, sy + 8, 3, 3);
+        ctx.fillRect(sx + 18, sy + 8, 3, 3);
+
+        // Smile
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(sx + 15, sy + 12, 4, 0.1 * Math.PI, 0.9 * Math.PI);
+        ctx.stroke();
     }
 }
 

@@ -1,4 +1,4 @@
-import { Utils } from './utils.js';
+import { Utils } from './utils.js?v=2';
 
 export class PhysicsEngine {
     constructor() {

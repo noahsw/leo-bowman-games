@@ -1,9 +1,9 @@
-import { InputManager } from './src/input.js';
-import { Renderer } from './src/renderer.js';
-import { PhysicsEngine } from './src/physics.js';
-import { Player, Platform } from './src/entities.js';
-import { LevelGenerator } from './src/level-gen.js';
-import { SaveManager } from './src/storage.js';
+import { InputManager } from './src/input.js?v=2';
+import { Renderer } from './src/renderer.js?v=2';
+import { PhysicsEngine } from './src/physics.js?v=2';
+import { Player, Platform } from './src/entities.js?v=2';
+import { LevelGenerator } from './src/level-gen.js?v=2';
+import { SaveManager } from './src/storage.js?v=2';
 
 // Main Game Entry Point
 class Game {
@@ -17,6 +17,7 @@ class Game {
         this.currentLevel = 1;
         this.score = 0;
         this.lives = 3;
+        this.selectedCharacter = null;
         
         // Components
         this.input = new InputManager();
@@ -38,6 +39,7 @@ class Game {
         this.startBtn = document.getElementById('start-btn');
         this.continueBtn = document.getElementById('continue-btn');
         
+        this.charSelectOverlay = document.getElementById('charselect-overlay');
         this.gameOverOverlay = document.getElementById('gameover-overlay');
         this.newGameBtn = document.getElementById('newgame-btn');
 
@@ -46,11 +48,11 @@ class Game {
 
     setupMenu() {
         const savedData = this.storage.load();
-        
+
         if (savedData) {
             this.continueBtn.classList.remove('hidden');
             this.continueBtn.textContent = `Continue (Level ${savedData.maxLevel})`;
-            
+
             this.continueBtn.addEventListener('click', () => {
                 this.currentLevel = savedData.maxLevel;
                 this.score = savedData.highScore;
@@ -58,19 +60,27 @@ class Game {
                 this.startGame();
             });
         }
-        
+
         this.startBtn.addEventListener('click', () => {
             this.currentLevel = 1;
             this.score = 0;
             this.lives = 3;
             this.startGame();
         });
-        
+
         this.newGameBtn.addEventListener('click', () => {
-            this.currentLevel = 1;
-            this.score = 0;
-            this.lives = 3;
-            this.startGame();
+            this.showCharacterSelect();
+        });
+
+        // Character select cards
+        document.querySelectorAll('.char-card').forEach(card => {
+            card.addEventListener('click', () => {
+                this.selectedCharacter = card.dataset.character;
+                this.currentLevel = 1;
+                this.score = 0;
+                this.lives = 3;
+                this.startGame();
+            });
         });
 
         // Pause handling
@@ -81,9 +91,16 @@ class Game {
         });
     }
 
+    showCharacterSelect() {
+        this.menuOverlay.classList.add('hidden');
+        this.gameOverOverlay.classList.add('hidden');
+        this.charSelectOverlay.classList.remove('hidden');
+    }
+
     startGame() {
         this.menuOverlay.classList.add('hidden');
         this.gameOverOverlay.classList.add('hidden');
+        this.charSelectOverlay.classList.add('hidden');
         this.loadLevel(this.currentLevel);
         this.start();
     }
@@ -108,7 +125,7 @@ class Game {
         this.entities = levelData.entities;
         
         // Setup Player
-        this.player = new Player(levelData.playerStart.x, levelData.playerStart.y);
+        this.player = new Player(levelData.playerStart.x, levelData.playerStart.y, this.selectedCharacter);
         this.entities.push(this.player);
         
         // Reset Camera
