@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shadowlands Tests</title>
+    <style>
+        body { background: #222; color: #fff; font-family: monospace; padding: 20px; }
+        .pass { color: #0f0; }
+        .fail { color: #f00; }
+    </style>
+</head>
+<body>
+    <h1>Shadowlands Unit Tests</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        import { runPhysicsTests } from './tests/physics.test.js';
+        import { runLevelGenTests } from './tests/level-gen.test.js';
+
+        const resultsDiv = document.getElementById('results');
+        let passed = 0;
+        let failed = 0;
+
+        function assert(condition, message) {
+            const div = document.createElement('div');
+            if (condition) {
+                div.className = 'pass';
+                div.textContent = `✓ ${message}`;
+                passed++;
+            } else {
+                div.className = 'fail';
+                div.textContent = `✗ ${message}`;
+                failed++;
+                console.error(`Assertion failed: ${message}`);
+            }
+            resultsDiv.appendChild(div);
+        }
+
+        try {
+            runPhysicsTests(assert);
+            runLevelGenTests(assert);
+        } catch (e) {
+            const div = document.createElement('div');
+            div.className = 'fail';
+            div.textContent = `EXCEPTION: ${e.message}`;
+            resultsDiv.appendChild(div);
+            console.error(e);
+        }
+
+        const summary = document.createElement('h3');
+        summary.textContent = `Total: ${passed + failed} | Passed: ${passed} | Failed: ${failed}`;
+        summary.style.color = failed === 0 ? '#0f0' : '#f00';
+        document.body.prepend(summary);
+    </script>
+</body>
+</html>

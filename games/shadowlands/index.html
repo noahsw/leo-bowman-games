@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadowlands</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="900" height="600"></canvas>
+        <div id="ui-overlay">
+            <div id="hud">
+                <div id="score-display">Score: 0</div>
+                <div id="lives-display">Lives: 3</div>
+                <div id="level-display">Level: 1</div>
+            </div>
+            <div id="menu-overlay" class="hidden">
+                <h1 class="game-title">Shadowlands</h1>
+                <div id="menu-options">
+                    <button id="start-btn">New Game</button>
+                    <button id="continue-btn" class="hidden">Continue</button>
+                </div>
+            </div>
+            <div id="charselect-overlay">
+                <h1 class="game-title">Choose Your Character</h1>
+                <div id="charselect-options">
+                    <button class="char-card" data-character="leo">
+                        <img src="assets/leo-face.jpeg" alt="Leo Trooper">
+                        <span class="char-name">Leo Trooper</span>
+                    </button>
+                    <button class="char-card" data-character="bowman">
+                        <img src="assets/bowman-face.jpeg" alt="Bowman Phone">
+                        <span class="char-name">Bowman Phone</span>
+                    </button>
+                </div>
+            </div>
+            <div id="gameover-overlay" class="hidden">
+                <h1 class="game-title">Game Over</h1>
+                <div id="gameover-options">
+                    <button id="newgame-btn">New Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="game.js?v=2"></script>
+</body>
+</html>
